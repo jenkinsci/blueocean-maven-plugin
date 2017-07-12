@@ -1,0 +1,14 @@
+{
+  "name": "upstream-2",
+  "version": "0.0.139-SNAPSHOT",
+  "description": "Shared JavaScript libraries for use with Jenkins Blue Ocean",
+  "main": "dist/js/index.js",
+  "scripts": {
+    "mvnbuild": "gulp bundle",
+    "mvntest": "echo 0"
+  },
+  "dependencies": {
+  },
+  "devDependencies": {
+  }
+}
