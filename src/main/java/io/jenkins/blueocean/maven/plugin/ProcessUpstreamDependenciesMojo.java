@@ -178,11 +178,14 @@ public class ProcessUpstreamDependenciesMojo extends AbstractJenkinsMojo {
         boolean isLocalProject = node.getArtifact().equals(project.getArtifact());
         try {
             if (!isLocalProject) { // not the local project
-                if (getLog().isDebugEnabled()) getLog().debug("Testing artifact for Blue Ocean plugins: " + artifact.toString());
-                List<Contents> jarEntries = findJarEntries(artifact.getFile().toURI(), "package.json");
-                if (jarEntries.size() > 0) {
-                    getLog().info("Adding upstream Blue Ocean plugin: " + artifact.toString());
-                    results.add(artifact);
+                //filtering system they cannot contains package.json files
+                if(! artifact.getScope().equals("system")) {
+                    if (getLog().isDebugEnabled()) getLog().debug("Testing artifact for Blue Ocean plugins: " + artifact.toString());
+                    List<Contents> jarEntries = findJarEntries(artifact.getFile().toURI(), "package.json");
+                    if (jarEntries.size() > 0) {
+                        getLog().info("Adding upstream Blue Ocean plugin: " + artifact.toString());
+                        results.add(artifact);
+                    }
                 }
             }
         } catch (IOException e) {

@@ -73,7 +73,7 @@
         <dependency>
             <groupId>org.jenkins-ci.tools</groupId>
             <artifactId>maven-hpi-plugin</artifactId>
-            <version>1.122</version>
+            <version>3.17</version>
         </dependency>
         <dependency>
             <groupId>org.codehaus.plexus</groupId>
@@ -107,10 +107,12 @@
         <plugins>
             <plugin>
                 <artifactId>maven-compiler-plugin</artifactId>
-                <version>3.6.1</version>
+                <version>3.8.1</version>
                 <configuration>
-                    <source>1.7</source>
-                    <target>1.7</target>
+                    <source>1.8</source>
+                    <target>1.8</target>
+                    <testSource>1.8</testSource>
+                    <testTarget>1.8</testTarget>
                 </configuration>
             </plugin>
             <plugin>
