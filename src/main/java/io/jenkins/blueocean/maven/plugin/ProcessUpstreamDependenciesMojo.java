@@ -13,6 +13,7 @@ import java.util.zip.ZipEntry;
 import java.util.zip.ZipInputStream;
 import javax.annotation.Nonnull;
 
+import org.apache.maven.artifact.Artifact;
 import org.apache.maven.plugin.MojoExecutionException;
 import org.apache.maven.plugins.annotations.Component;
 import org.apache.maven.plugins.annotations.LifecyclePhase;
@@ -179,7 +180,7 @@ public class ProcessUpstreamDependenciesMojo extends AbstractJenkinsMojo {
         try {
             if (!isLocalProject) { // not the local project
                 //filtering system they cannot contains package.json files
-                if(! artifact.getScope().equals("system")) {
+                if(! artifact.getScope().equals(Artifact.SCOPE_SYSTEM)) {
                     if (getLog().isDebugEnabled()) getLog().debug("Testing artifact for Blue Ocean plugins: " + artifact.toString());
                     List<Contents> jarEntries = findJarEntries(artifact.getFile().toURI(), "package.json");
                     if (jarEntries.size() > 0) {
