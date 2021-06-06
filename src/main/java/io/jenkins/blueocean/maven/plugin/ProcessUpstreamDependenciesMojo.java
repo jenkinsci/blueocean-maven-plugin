@@ -6,13 +6,14 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.net.URI;
 import java.net.URL;
+import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.regex.Pattern;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipInputStream;
-import javax.annotation.Nonnull;
 
+import edu.umd.cs.findbugs.annotations.NonNull;
 import org.apache.maven.plugin.MojoExecutionException;
 import org.apache.maven.plugins.annotations.Component;
 import org.apache.maven.plugins.annotations.LifecyclePhase;
@@ -82,7 +83,7 @@ public class ProcessUpstreamDependenciesMojo extends AbstractJenkinsMojo {
             for (MavenArtifact artifact : artifacts) {
                 List<Contents> jarEntries = findJarEntries(artifact.getFile().toURI(), "package.json");
 
-                JSONObject packageJson = JSONObject.fromObject(new String(jarEntries.get(0).data, "utf-8"));
+                JSONObject packageJson = JSONObject.fromObject(new String(jarEntries.get(0).data, StandardCharsets.UTF_8 ));
 
                 String name = packageJson.getString("name");
                 String[] subdirs = name.split("/");
@@ -101,7 +102,7 @@ public class ProcessUpstreamDependenciesMojo extends AbstractJenkinsMojo {
                     }
                 }
 
-                int read = 0;
+                int read;
                 byte[] buf = new byte[1024*8];
 
                 try (ZipInputStream jar = new ZipInputStream(new FileInputStream(artifact.getFile()))) {
@@ -142,7 +143,7 @@ public class ProcessUpstreamDependenciesMojo extends AbstractJenkinsMojo {
         public final String fileName;
         public final byte[] data;
         
-        Contents(@Nonnull String fileName, @Nonnull byte[] data) {
+        Contents( @NonNull String fileName, @NonNull byte[] data) {
             this.fileName = fileName;
             this.data = data;
         }
@@ -151,8 +152,8 @@ public class ProcessUpstreamDependenciesMojo extends AbstractJenkinsMojo {
     /**
      * Finds jar entries matching a path glob, e.g. **\/META-INF/*.properties
      */
-    @Nonnull
-    private List<Contents> findJarEntries(@Nonnull URI jarFile, @Nonnull String pathGlob) throws IOException {
+    @NonNull
+    private List<Contents> findJarEntries(@NonNull URI jarFile, @NonNull String pathGlob) throws IOException {
         URL jarUrl = jarFile.toURL();
         if (getLog().isDebugEnabled()) getLog().debug("Looking for " + pathGlob + " in " + jarFile + " with url: " + jarUrl);
         List<Contents> out = new ArrayList<>();
@@ -173,7 +174,7 @@ public class ProcessUpstreamDependenciesMojo extends AbstractJenkinsMojo {
     /**
      * Collects all "blue ocean-like" upstream dependencies
      */
-    private void collectBlueoceanDependencies(@Nonnull DependencyNode node, @Nonnull List<MavenArtifact> results) {
+    private void collectBlueoceanDependencies(@NonNull DependencyNode node, @NonNull List<MavenArtifact> results) {
         MavenArtifact artifact = wrap(node.getArtifact());
         boolean isLocalProject = node.getArtifact().equals(project.getArtifact());
         try {
@@ -181,7 +182,7 @@ public class ProcessUpstreamDependenciesMojo extends AbstractJenkinsMojo {
                 if (getLog().isDebugEnabled()) getLog().debug("Testing artifact for Blue Ocean plugins: " + artifact.toString());
                 List<Contents> jarEntries = findJarEntries(artifact.getFile().toURI(), "package.json");
                 if (jarEntries.size() > 0) {
-                    getLog().info("Adding upstream Blue Ocean plugin: " + artifact.toString());
+                    getLog().info("Adding upstream Blue Ocean plugin: " + artifact);
                     results.add(artifact);
                 }
             }
