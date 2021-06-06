@@ -173,6 +173,7 @@
                     <cloneProjectsTo>${project.build.directory}/it</cloneProjectsTo>
                     <setupIncludes>
                         <setupInclude>0-upstream-1/pom.xml</setupInclude>
+                        <setupInclude>0-upstream-2/pom.xml</setupInclude>
                     </setupIncludes>
                     <pomIncludes>
                         <pomInclude>*/pom.xml</pomInclude>
