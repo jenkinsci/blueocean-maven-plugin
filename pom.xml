@@ -12,6 +12,13 @@
 
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+        <!-- Defines a SpotBugs threshold. Use "Low" to discover low-priority bugs.
+             Hint: SpotBugs considers some real NPE risks in Jenkins as low-priority issues, it is recommended to enable it in plugins.
+          -->
+        <spotbugs.threshold>Medium</spotbugs.threshold>
+        <!-- Defines a SpotBugs effort. Use "Max" to maximize the scan depth -->
+        <spotbugs.effort>Default</spotbugs.effort>
+        <spotbugs.failOnError>true</spotbugs.failOnError>
     </properties>
     
     <scm>
@@ -74,6 +81,19 @@
             <groupId>org.jenkins-ci.tools</groupId>
             <artifactId>maven-hpi-plugin</artifactId>
             <version>3.17</version>
+            <exclusions>
+                <exclusion>
+                    <groupId>org.kohsuke.stapler</groupId>
+                    <artifactId>*</artifactId>
+                </exclusion>
+            </exclusions>
+        </dependency>
+        <!-- TODO remove this dependency -->
+        <dependency>
+            <groupId>org.kohsuke.stapler</groupId>
+            <artifactId>json-lib</artifactId>
+            <classifier>jdk15</classifier>
+            <version>2.1</version>
         </dependency>
         <dependency>
             <groupId>org.codehaus.plexus</groupId>
@@ -86,9 +106,9 @@
             <version>2.1</version>
         </dependency>
         <dependency>
-            <groupId>org.jenkins-ci.main</groupId>
-            <artifactId>jenkins-core</artifactId>
-            <version>2.270</version>
+            <groupId>com.github.spotbugs</groupId>
+            <artifactId>spotbugs-annotations</artifactId>
+            <version>4.2.3</version>
         </dependency>
         <dependency>
             <groupId>junit</groupId>
@@ -107,6 +127,11 @@
                     <source>1.8</source>
                     <target>1.8</target>
                 </configuration>
+            </plugin>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-javadoc-plugin</artifactId>
+                <version>3.3.0</version>
             </plugin>
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
@@ -137,24 +162,27 @@
                 <version>2.5.3</version>
             </plugin>
             <plugin>
-                <groupId>org.codehaus.mojo</groupId>
-                <artifactId>findbugs-maven-plugin</artifactId>
-                <version>3.0.5</version>
+                <groupId>com.github.spotbugs</groupId>
+                <artifactId>spotbugs-maven-plugin</artifactId>
+                <version>4.2.2</version>
                 <configuration>
-                    <effort>Max</effort>
-                    <threshold>Default</threshold>
-                    <fork>false</fork>
-                    <xmlOutput>true</xmlOutput>
-                    <findbugsXmlOutput>false</findbugsXmlOutput>
-                    <excludeFilterFile>${project.basedir}/findbugs-excludes.xml</excludeFilterFile>
+                    <failOnError>${spotbugs.failOnError}</failOnError>
                 </configuration>
                 <executions>
                     <execution>
-                        <id>analyze-compile</id>
-                        <phase>compile</phase>
+                        <id>spotbugs</id>
                         <goals>
                             <goal>check</goal>
                         </goals>
+                        <phase>verify</phase>
+                        <configuration>
+                            <!--  Do not define excludeFilterFile here as it will force a plugin to provide a file -->
+                            <!--  Instead we configure this in a profile -->
+                            <xmlOutput>true</xmlOutput>
+                            <spotbugsXmlOutput>false</spotbugsXmlOutput>
+                            <effort>${spotbugs.effort}</effort>
+                            <threshold>${spotbugs.threshold}</threshold>
+                        </configuration>
                     </execution>
                 </executions>
             </plugin>
