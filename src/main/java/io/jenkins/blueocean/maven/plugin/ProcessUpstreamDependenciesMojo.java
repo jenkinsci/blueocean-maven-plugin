@@ -165,7 +165,7 @@ public class ProcessUpstreamDependenciesMojo extends AbstractJenkinsMojo {
             for (ZipEntry entry; (entry = jar.getNextEntry()) != null;) {
                 if (getLog().isDebugEnabled()) getLog().debug("Entry: " + entry.getName() + ", matches: " + matcher.matcher(entry.getName()).matches());
                 if (matcher.matcher(entry.getName()).matches()) {
-                    out.add(new Contents(entry.getName(), IOUtils.toByteArray( jar)));
+                    out.add(new Contents(entry.getName(), IOUtils.toByteArray(jar)));
                 }
             }
         }
