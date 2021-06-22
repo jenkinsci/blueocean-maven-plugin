@@ -3,7 +3,7 @@
 
     <groupId>io.jenkins.blueocean</groupId>
     <artifactId>blueocean-maven-plugin</artifactId>
-    <version>0.0.3-SNAPSHOT</version>
+    <version>0.0.3</version>
     <packaging>maven-plugin</packaging>
 
     <name>Blue Ocean Maven Plugin</name>
@@ -25,7 +25,7 @@
         <connection>scm:git:https://github.com/jenkinsci/blueocean-maven-plugin.git</connection>
         <developerConnection>scm:git:git@github.com:jenkinsci/blueocean-maven-plugin.git</developerConnection>
         <url>https://github.com/jenkinsci/blueocean-maven-plugin</url>
-        <tag>HEAD</tag>
+        <tag>blueocean-maven-plugin-0.0.3</tag>
     </scm>
 
     <developers>
