@@ -113,6 +113,9 @@ public class ProcessUpstreamDependenciesMojo extends AbstractJenkinsMojo {
                             continue;
                         }
                         File outFile = new File(outDir, entry.getName());
+                        if (!outFile.toPath().normalize().startsWith(outDir.toPath().normalize())) {
+                            throw new IOException("Bad zip entry");
+                        }
                         if (!outFile.exists() || outFile.lastModified() < artifactLastModified) {
                             if (getLog().isDebugEnabled()) getLog().debug("Copying file: " + outFile.getAbsolutePath());
                             File parentFile = outFile.getParentFile();
